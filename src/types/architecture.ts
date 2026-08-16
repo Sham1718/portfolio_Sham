@@ -46,6 +46,9 @@ export interface ArchitectureModel {
 }
 
 export interface ArchitectureScrollUpdate {
-  state: ArchitectureState;
-  progress: number;
+  currentState: ArchitectureState;
+  nextState?: ArchitectureState;
+  transitionProgress: number;
+  state?: ArchitectureState;
+  progress?: number;
 }

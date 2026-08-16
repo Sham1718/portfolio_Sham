@@ -5,7 +5,7 @@ import type {
   ArchitectureState,
 } from "@/types/architecture";
 
-const node = (
+const createNode = (
   id: string,
   label: string,
   x: number,
@@ -19,112 +19,205 @@ const node = (
   status: "healthy",
 });
 
-const links = (...pairs: Array<readonly [string, string]>): ArchitectureConnection[] =>
+const createLinks = (
+  ...pairs: Array<readonly [string, string]>
+): ArchitectureConnection[] =>
   pairs.map(([from, to], index) => ({ id: `link-${index + 1}`, from, to }));
 
-const packetRoutes = (route: readonly string[]) => [
-  { id: "request", route },
-  { id: "response", route: [...route].reverse() },
+const createPacketRoutes = (
+  requestRoute: readonly string[],
+  responseRoute?: readonly string[],
+) => [
+  { id: "request", route: requestRoute },
+  { id: "response", route: responseRoute ?? [...requestRoute].reverse() },
 ];
 
 export const architectures: Record<ArchitectureState, ArchitectureModel> = {
+  // 1. HERO: Central Gateway Fan-Out / Diamond Topology
   hero: {
     state: "hero",
     nodes: [
-      node("node-1", "CLIENT", 1050, 105, "far"),
-      node("node-2", "API_GATEWAY", 920, 245),
-      node("node-3", "AUTH_SERVICE", 155, 545, "far"),
-      node("node-4", "PROJECT_SERVICE", 980, 470, "near"),
-      node("node-5", "USER_SERVICE", 720, 635),
-      node("node-6", "DATABASE", 1040, 660, "near"),
+      createNode("hero-client", "CLIENT", 740, 90, "far"),
+      createNode("hero-gw", "API_GATEWAY", 740, 200, "near"),
+      createNode("hero-auth", "AUTH_SERVICE", 570, 340, "far"),
+      createNode("hero-proj", "PROJECT_SERVICE", 740, 340, "near"),
+      createNode("hero-user", "USER_SERVICE", 910, 340, "mid"),
+      createNode("hero-db", "DATABASE", 740, 520, "near"),
     ],
-    connections: links(
-      ["node-1", "node-2"],
-      ["node-2", "node-3"],
-      ["node-2", "node-4"],
-      ["node-2", "node-5"],
-      ["node-3", "node-6"],
-      ["node-4", "node-6"],
-      ["node-5", "node-6"],
+    connections: createLinks(
+      ["hero-client", "hero-gw"],
+      ["hero-gw", "hero-auth"],
+      ["hero-gw", "hero-proj"],
+      ["hero-gw", "hero-user"],
+      ["hero-auth", "hero-db"],
+      ["hero-proj", "hero-db"],
+      ["hero-user", "hero-db"],
     ),
-    packets: packetRoutes(["node-1", "node-2", "node-4", "node-6"]),
+    packets: createPacketRoutes(["hero-client", "hero-gw", "hero-proj", "hero-db"]),
   },
+
+  // 2. ABOUT: Stepped Diagonal Waterfall (Upper-Right to Lower-Left)
   about: {
     state: "about",
     nodes: [
-      node("node-1", "REQUEST", 920, 115, "far"),
-      node("node-2", "CONTROLLER", 860, 235),
-      node("node-3", "SERVICE", 800, 355),
-      node("node-4", "REPOSITORY", 740, 475, "near"),
-      node("node-5", "DATABASE", 680, 595, "near"),
-      node("node-6", "RESPONSE", 1010, 500, "far"),
+      createNode("about-req", "REQUEST", 880, 100, "far"),
+      createNode("about-ctrl", "CONTROLLER", 810, 200, "mid"),
+      createNode("about-svc", "SERVICE", 740, 305, "near"),
+      createNode("about-repo", "REPOSITORY", 670, 410, "mid"),
+      createNode("about-db", "DATABASE", 600, 515, "near"),
     ],
-    connections: links(
-      ["node-1", "node-2"],
-      ["node-2", "node-3"],
-      ["node-3", "node-4"],
-      ["node-4", "node-5"],
-      ["node-3", "node-6"],
+    connections: createLinks(
+      ["about-req", "about-ctrl"],
+      ["about-ctrl", "about-svc"],
+      ["about-svc", "about-repo"],
+      ["about-repo", "about-db"],
     ),
-    packets: packetRoutes(["node-1", "node-2", "node-3", "node-4", "node-5"]),
+    packets: createPacketRoutes([
+      "about-req",
+      "about-ctrl",
+      "about-svc",
+      "about-repo",
+      "about-db",
+    ]),
   },
+
+  // 3. ENGINEERING: Hexagonal Parallel Fork-and-Join (Cache vs Auth)
   engineering: {
     state: "engineering",
     nodes: [
-      node("node-1", "CLIENT", 980, 100, "far"),
-      node("node-2", "RATE_LIMITER", 900, 220),
-      node("node-3", "CACHE", 820, 340),
-      node("node-4", "AUTH", 740, 460, "near"),
-      node("node-5", "SERVICE", 660, 580, "near"),
-      node("node-6", "DATABASE", 580, 690, "mid"),
+      createNode("eng-client", "CLIENT", 740, 85, "far"),
+      createNode("eng-rl", "RATE_LIMITER", 740, 180, "near"),
+      createNode("eng-cache", "CACHE", 590, 290, "mid"),
+      createNode("eng-auth", "AUTH", 890, 290, "near"),
+      createNode("eng-svc", "SERVICE", 740, 415, "near"),
+      createNode("eng-db", "DATABASE", 740, 545, "near"),
     ],
-    connections: links(
-      ["node-1", "node-2"],
-      ["node-2", "node-3"],
-      ["node-3", "node-4"],
-      ["node-4", "node-5"],
-      ["node-5", "node-6"],
+    connections: createLinks(
+      ["eng-client", "eng-rl"],
+      ["eng-rl", "eng-cache"],
+      ["eng-rl", "eng-auth"],
+      ["eng-cache", "eng-svc"],
+      ["eng-auth", "eng-svc"],
+      ["eng-svc", "eng-db"],
     ),
-    packets: packetRoutes(["node-1", "node-2", "node-3", "node-4", "node-5", "node-6"]),
+    packets: createPacketRoutes([
+      "eng-client",
+      "eng-rl",
+      "eng-cache",
+      "eng-svc",
+      "eng-db",
+    ]),
   },
+
+  // 4. LEGAL AI: Dual-Column Pillars (Ingestion Left, RAG Loop Right)
   "legal-ai": {
     state: "legal-ai",
     nodes: [
-      node("node-1", "DOCUMENT", 1020, 110, "far"),
-      node("node-2", "CHUNKING", 920, 225),
-      node("node-3", "EMBEDDINGS", 820, 340),
-      node("node-4", "FAISS", 720, 455, "near"),
-      node("node-5", "RAG", 620, 570, "near"),
-      node("node-6", "MODEL", 520, 675, "mid"),
+      createNode("legal-doc", "DOCUMENT", 580, 110, "far"),
+      createNode("legal-chunk", "CHUNKING", 580, 225, "mid"),
+      createNode("legal-embed", "EMBEDDINGS", 580, 345, "near"),
+      createNode("legal-faiss", "FAISS", 580, 470, "near"),
+      createNode("legal-retrieval", "RETRIEVAL", 870, 110, "mid"),
+      createNode("legal-rag", "RAG", 870, 225, "near"),
+      createNode("legal-model", "MODEL", 870, 345, "near"),
+      createNode("legal-resp", "RESPONSE", 870, 470, "far"),
     ],
-    connections: links(
-      ["node-1", "node-2"],
-      ["node-2", "node-3"],
-      ["node-3", "node-4"],
-      ["node-4", "node-5"],
-      ["node-5", "node-6"],
+    connections: createLinks(
+      ["legal-doc", "legal-chunk"],
+      ["legal-chunk", "legal-embed"],
+      ["legal-embed", "legal-faiss"],
+      ["legal-faiss", "legal-retrieval"],
+      ["legal-retrieval", "legal-rag"],
+      ["legal-rag", "legal-model"],
+      ["legal-model", "legal-resp"],
     ),
-    packets: packetRoutes(["node-1", "node-2", "node-3", "node-4", "node-5", "node-6"]),
+    packets: createPacketRoutes([
+      "legal-doc",
+      "legal-chunk",
+      "legal-embed",
+      "legal-faiss",
+      "legal-retrieval",
+      "legal-rag",
+      "legal-model",
+      "legal-resp",
+    ]),
   },
+
+  // 5. MICROSERVICES: Asymmetric Tree Branching & Event Bus
   microservices: {
     state: "microservices",
     nodes: [
-      node("node-1", "CLIENT", 1000, 105, "far"),
-      node("node-2", "API_GATEWAY", 920, 230),
-      node("node-3", "AUTH_SERVICE", 650, 390),
-      node("node-4", "PROJECT_SERVICE", 930, 430, "near"),
-      node("node-5", "ISSUE_SERVICE", 1110, 555, "mid"),
-      node("node-6", "NOTIFICATION_SERVICE", 770, 650, "near"),
+      createNode("ms-client", "CLIENT", 580, 110, "far"),
+      createNode("ms-gw", "API_GATEWAY", 580, 240, "near"),
+      createNode("ms-auth", "AUTH_SERVICE", 860, 130, "mid"),
+      createNode("ms-proj", "PROJECT_SERVICE", 860, 240, "near"),
+      createNode("ms-issue", "ISSUE_SERVICE", 860, 350, "mid"),
+      createNode("ms-notify", "NOTIFICATION_SERVICE", 720, 480, "near"),
     ],
-    connections: links(
-      ["node-1", "node-2"],
-      ["node-2", "node-3"],
-      ["node-2", "node-4"],
-      ["node-2", "node-5"],
-      ["node-2", "node-6"],
-      ["node-4", "node-5"],
+    connections: createLinks(
+      ["ms-client", "ms-gw"],
+      ["ms-gw", "ms-auth"],
+      ["ms-gw", "ms-proj"],
+      ["ms-gw", "ms-issue"],
+      ["ms-proj", "ms-notify"],
+      ["ms-issue", "ms-notify"],
     ),
-    packets: packetRoutes(["node-1", "node-2", "node-4", "node-5"]),
+    packets: createPacketRoutes(
+      ["ms-client", "ms-gw", "ms-proj", "ms-notify"],
+      ["ms-gw", "ms-auth"],
+    ),
+  },
+};
+
+export const mobilePipelines: Record<
+  ArchitectureState,
+  { path: string; nodes: [number, number, string][] }
+> = {
+  hero: {
+    path: "M220 90V200L160 310V420",
+    nodes: [
+      [220, 90, "CLIENT"],
+      [220, 200, "API_GATEWAY"],
+      [160, 310, "SERVICES"],
+      [160, 420, "DATABASE"],
+    ],
+  },
+  about: {
+    path: "M220 100L190 200L160 300L130 410",
+    nodes: [
+      [220, 100, "REQUEST"],
+      [190, 200, "CONTROLLER"],
+      [160, 300, "SERVICE"],
+      [130, 410, "DATABASE"],
+    ],
+  },
+  engineering: {
+    path: "M170 90V180L130 280L170 380M170 180L210 280L170 380",
+    nodes: [
+      [170, 90, "CLIENT"],
+      [170, 180, "RATE_LIMITER"],
+      [130, 280, "CACHE"],
+      [210, 280, "AUTH"],
+      [170, 380, "SERVICE"],
+    ],
+  },
+  "legal-ai": {
+    path: "M120 120V300H220V120",
+    nodes: [
+      [120, 120, "DOCUMENT"],
+      [120, 300, "FAISS"],
+      [220, 300, "MODEL"],
+      [220, 120, "RETRIEVAL"],
+    ],
+  },
+  microservices: {
+    path: "M120 110V220H220M220 220L170 380",
+    nodes: [
+      [120, 110, "CLIENT"],
+      [120, 220, "GATEWAY"],
+      [220, 220, "SERVICES"],
+      [170, 380, "NOTIFICATION"],
+    ],
   },
 };
 

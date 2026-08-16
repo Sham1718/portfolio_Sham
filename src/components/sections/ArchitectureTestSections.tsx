@@ -1,22 +1,41 @@
-const sections = [
-  ["02", "ABOUT", "Architecture transition test"],
-  ["03", "ENGINEERING", "Architecture transition test"],
-  ["04", "LEGAL AI", "Architecture transition test"],
-  ["05", "MICROSERVICES", "Architecture transition test"],
-] as const;
+import { ArchitectureScene } from "@/components/background/ArchitectureScene";
+import { architectures } from "@/data/architectures";
+import type { ArchitectureState } from "@/types/architecture";
 
-const ids = ["about", "engineering", "legal-ai", "microservices"] as const;
+const sections: {
+  number: string;
+  title: string;
+  description: string;
+  id: string;
+  state: ArchitectureState;
+}[] = [
+  {
+    number: "04",
+    title: "LEGAL AI",
+    description: "Document ingestion, embeddings, FAISS & RAG model pipeline",
+    id: "legal-ai",
+    state: "legal-ai",
+  },
+  {
+    number: "05",
+    title: "MICROSERVICES",
+    description: "API Gateway, domain services & notification broker",
+    id: "microservices",
+    state: "microservices",
+  },
+];
 
 export function ArchitectureTestSections() {
   return (
     <div>
-      {sections.map(([number, title, description], index) => (
+      {sections.map(({ number, title, description, id, state }) => (
         <section
-          key={title}
-          id={ids[index]}
+          key={id}
+          id={id}
           className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl items-center py-20"
         >
-          <div className="border-l border-border/70 pl-5 sm:pl-7">
+          <ArchitectureScene architecture={architectures[state]} />
+          <div className="relative z-10 border-l border-border/70 pl-5 sm:pl-7">
             <p className="font-mono text-xs tracking-[0.18em] text-accent uppercase">
               Section {number}
             </p>
