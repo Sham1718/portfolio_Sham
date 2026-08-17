@@ -181,7 +181,17 @@ export function ArchitectureScene({
       }
     };
 
+    // Mirror visibility onto the container so the CSS ambient animations
+    // (connection flow + node halos) pause while the section is off-screen.
+    const syncAmbientAnimation = () => {
+      containerRef.current?.setAttribute(
+        "data-animating",
+        isVisible.current ? "true" : "false",
+      );
+    };
+
     updateMotion();
+    syncAmbientAnimation();
     motionQuery.addEventListener("change", updateMotion);
 
     // Attach ScrollTrigger to parent section
@@ -195,6 +205,7 @@ export function ArchitectureScene({
         end: "bottom 20%",
         onEnter: () => {
           isVisible.current = true;
+          syncAmbientAnimation();
           if (containerRef.current) {
             gsap.to(containerRef.current, {
               opacity: 1,
@@ -207,6 +218,7 @@ export function ArchitectureScene({
         },
         onLeave: () => {
           isVisible.current = false;
+          syncAmbientAnimation();
           if (containerRef.current) {
             gsap.to(containerRef.current, {
               opacity: 0,
@@ -219,6 +231,7 @@ export function ArchitectureScene({
         },
         onEnterBack: () => {
           isVisible.current = true;
+          syncAmbientAnimation();
           if (containerRef.current) {
             gsap.to(containerRef.current, {
               opacity: 1,
@@ -232,6 +245,7 @@ export function ArchitectureScene({
         onLeaveBack: () => {
           if (architecture.state !== "hero") {
             isVisible.current = false;
+            syncAmbientAnimation();
             if (containerRef.current) {
               gsap.to(containerRef.current, {
                 opacity: 0,
@@ -298,10 +312,11 @@ export function ArchitectureScene({
 
         {/* Nodes layer */}
         <g>
-          {architecture.nodes.map((node) => (
+          {architecture.nodes.map((node, i) => (
             <ArchitectureNode
               key={node.id}
               node={node}
+              index={i}
               groupRef={() => {}}
               rectRef={(el) => {
                 if (el) nodeRectRefs.current.set(node.id, el);
@@ -327,7 +342,7 @@ export function ArchitectureScene({
               }}
               x={getNodePos(architecture.packets[0].route[0]).x}
               y={getNodePos(architecture.packets[0].route[0]).y}
-              fill="#67e8f9"
+              fill="var(--accent)"
             />
           )}
           {architecture.packets[1] && (
@@ -338,7 +353,7 @@ export function ArchitectureScene({
               }}
               x={getNodePos(architecture.packets[1].route[0]).x}
               y={getNodePos(architecture.packets[1].route[0]).y}
-              fill="#6ee7b7"
+              fill="var(--accent)"
             />
           )}
         </g>
@@ -355,17 +370,17 @@ export function ArchitectureScene({
           <path
             d={mobilePipeline.path}
             fill="none"
-            stroke="#67e8f9"
+            stroke="var(--accent)"
             strokeOpacity="0.32"
             strokeWidth="1"
           />
           {mobilePipeline.nodes.map(([x, y, label]) => (
             <g key={label} transform={`translate(${x} ${y})`} opacity="0.55">
-              <circle r="3.5" fill="#6ee7b7" opacity="0.9" />
+              <circle r="3.5" fill="var(--accent)" opacity="0.9" />
               <text
                 x="10"
                 y="4"
-                fill="#eef5f8"
+                fill="var(--foreground)"
                 fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
                 fontSize="10"
                 letterSpacing="1"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { TerminalWindow } from "@/components/ui/TerminalWindow";
 
 type BootState = "booting" | "completed" | "exiting" | "hidden";
 
@@ -82,8 +83,12 @@ export function BootSequence({ children }: BootSequenceProps) {
               : "translate-y-0 opacity-100"
           }`}
         >
-          <div className="mx-auto w-full max-w-6xl">
-            <div className="max-w-xl border-l border-border pl-4 font-mono text-xs leading-7 text-muted sm:pl-5 sm:text-sm sm:leading-8">
+          <TerminalWindow label="shyam@portfolio:~" size="sm">
+            {/* Boot log body — content/reveal logic unchanged */}
+            {/* Density matches the Contact terminal: tight 1.6 leading for the
+                continuous boot-log block, a clear gap before the distinct
+                "access granted." completion stage. */}
+            <div className="p-5 font-mono text-xs leading-[1.6] text-muted sm:p-6 sm:text-sm">
               {bootLines.slice(0, visibleLineCount).map((line) => (
                 <p key={line} className="break-words">
                   <span className="text-accent">&gt; </span>
@@ -91,17 +96,17 @@ export function BootSequence({ children }: BootSequenceProps) {
                 </p>
               ))}
               {accessGranted && (
-                <p className="mt-2 text-foreground">
+                <p className="mt-6 text-foreground">
                   <span className="text-accent">&gt; </span>
                   access granted.
                 </p>
               )}
               <span
                 aria-hidden="true"
-                className="inline-block h-4 w-1.5 translate-y-0.5 bg-accent motion-safe:animate-pulse"
+                className="inline-block h-4 w-1.5 translate-y-0.5 bg-accent motion-safe:animate-[cursor-blink_1s_steps(1)_infinite]"
               />
             </div>
-          </div>
+          </TerminalWindow>
         </section>
       )}
     </>

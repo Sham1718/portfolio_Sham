@@ -9,7 +9,7 @@ export function DataPacket({
   packetRef,
   x,
   y,
-  fill = "#67e8f9",
+  fill = "var(--accent)",
 }: DataPacketProps) {
   return (
     <circle
@@ -19,7 +19,7 @@ export function DataPacket({
       r="3.5"
       fill={fill}
       opacity="0"
-      style={{ filter: "drop-shadow(0 0 3px rgba(103, 232, 249, 0.85))" }}
+      style={{ filter: "drop-shadow(0 0 3px rgba(181, 101, 74, 0.85))" }}
     />
   );
 }

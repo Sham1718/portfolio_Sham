@@ -1,14 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #05070b;
-  --surface: #0a0f17;
-  --surface-elevated: #0e1520;
-  --foreground: #eef5f8;
-  --muted: #8f9daa;
-  --accent: #67e8f9;
-  --status: #6ee7b7;
-  --border: #1d2a36;
+  --background: #0d0d0c;
+  --surface: #141412;
+  --surface-elevated: #1a1a17;
+  --foreground: #f2efe9;
+  --muted: #93908a;
+  --accent: #b5654a;
+  --status: var(--accent);
+  --border: #2a2a26;
+  /* Subtle lightness variants of the single accent hue — same color,
+     slightly lighter/darker per section. Consumed by the custom cursor. */
+  --accent-1: color-mix(in srgb, var(--accent) 88%, white);
+  --accent-2: color-mix(in srgb, var(--accent) 88%, black);
+  --accent-3: color-mix(in srgb, var(--accent) 74%, white);
+  --accent-4: color-mix(in srgb, var(--accent) 74%, black);
+  --accent-5: color-mix(in srgb, var(--accent) 94%, white);
+  --accent-6: color-mix(in srgb, var(--accent) 94%, black);
 }
 
 @theme inline {
@@ -20,6 +28,115 @@
   --color-accent: var(--accent);
   --color-status: var(--status);
   --color-border: var(--border);
+}
+
+@utility glass-panel {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+/*
+ * Tailwind v4's @utility parser silently drops `backdrop-filter` /
+ * `-webkit-backdrop-filter` declarations (the property is managed by its
+ * own --tw-backdrop-* variable system), and plain rules whose selector
+ * exactly matches a utility name are routed through the same parser. The
+ * :where() wrapper keeps this rule out of that pipeline. It still composes
+ * with variants alongside the @utility above, and the @supports fallback
+ * below raises opacity where unsupported.
+ */
+/*
+ * Tailwind v4 drops `backdrop-filter` declarations that trip its candidate
+ * scanner: @utility bodies are stripped of the property entirely, and plain
+ * rules whose selector names the utility class get emptied. A plain rule
+ * with an attribute selector survives, but only if the value avoids the
+ * scanner — `saturate(140%)` (percentage) removes the whole rule, while the
+ * equivalent decimal `saturate(1.4)` compiles fine. The rule below matches
+ * every .glass-panel element and composes with variants alongside the
+ * @utility above; the @supports fallback after it raises background opacity
+ * where backdrop-filter is unsupported.
+ */
+[class~="glass-panel"] {
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-panel {
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+  }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-panel {
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+  }
+}
+
+/*
+ * Ambient diagram animations — an always-on CSS layer separate from the
+ * GSAP packet timeline. GSAP owns strokeOpacity (connections) and node
+ * opacity/strokeOpacity; these animations only touch stroke-dashoffset
+ * (connections) and the halo circle's opacity, so the two never fight.
+ */
+.arch-connection {
+  stroke-dasharray: 4 6;
+  animation: connection-flow 3s linear infinite;
+}
+
+.arch-halo {
+  animation: node-halo-breathe 4s ease-in-out infinite;
+  animation-delay: calc(var(--node-index, 0) * 0.3s);
+}
+
+@keyframes connection-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes node-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Terminal cursor: hard on/off step blink (steps(1), no smooth fade) — used
+   by Contact's idle prompt line. Reduced motion handled via motion-safe. */
+@keyframes cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Off-screen sections (ArchitectureScene sets data-animating on its root) */
+[data-animating="false"] .arch-connection,
+[data-animating="false"] .arch-halo {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-connection,
+  .arch-halo {
+    animation: none;
+  }
+}
+
+/*
+ * Hide the OS cursor only while the custom cursor component is mounted;
+ * CustomCursor toggles this class on <html> after confirming a fine
+ * pointer without reduced motion. Touch devices keep the OS cursor.
+ */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
 }
 
 * {
@@ -52,7 +169,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1d2a36;
+  background: var(--border);
   border: 0.1875rem solid var(--background);
   border-radius: 999px;
 }

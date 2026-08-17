@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { ArchitectureNode as ArchitectureNodeModel } from "@/types/architecture";
 
 export const getNodeWidth = (label: string) =>
@@ -13,6 +14,8 @@ export const depthOpacity = {
 
 interface ArchitectureNodeProps {
   node: ArchitectureNodeModel;
+  /** Position within the scene, used to stagger the halo breathe animation. */
+  index?: number;
   groupRef: (element: SVGGElement | null) => void;
   rectRef: (element: SVGRectElement | null) => void;
   lineRef: (element: SVGPathElement | null) => void;
@@ -22,6 +25,7 @@ interface ArchitectureNodeProps {
 
 export function ArchitectureNode({
   node,
+  index = 0,
   groupRef,
   rectRef,
   lineRef,
@@ -38,13 +42,24 @@ export function ArchitectureNode({
       opacity={depthOpacity[depth]}
       style={{ willChange: "transform, opacity" }}
     >
+      {/* Ambient breathing halo — a separate element GSAP never touches, so
+          its opacity animation can't conflict with the packet pulse. */}
+      <circle
+        className="arch-halo"
+        cx={width / 2}
+        cy={NODE_HEIGHT / 2}
+        r={NODE_HEIGHT}
+        fill="var(--accent)"
+        opacity="0.15"
+        style={{ "--node-index": index } as CSSProperties}
+      />
       <rect
         ref={rectRef}
         width={width}
         height={NODE_HEIGHT}
-        fill="#0a0f17"
+        fill="var(--surface)"
         fillOpacity="0.94"
-        stroke="#67e8f9"
+        stroke="var(--accent)"
         strokeOpacity="0.62"
         strokeWidth="1"
         rx="2"
@@ -52,7 +67,7 @@ export function ArchitectureNode({
       <path
         ref={lineRef}
         d={`M0 7H${width}`}
-        stroke="#67e8f9"
+        stroke="var(--accent)"
         strokeOpacity="0.42"
       />
       <circle
@@ -60,14 +75,14 @@ export function ArchitectureNode({
         cx="11"
         cy="17"
         r="2.5"
-        fill={node.status === "healthy" ? "#6ee7b7" : "#67e8f9"}
+        fill="var(--accent)"
         opacity="0.95"
       />
       <text
         ref={labelRef}
         x="20"
         y="21"
-        fill="#eef5f8"
+        fill="var(--foreground)"
         opacity="0.95"
         fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
         fontSize="10.5"

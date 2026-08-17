@@ -45,7 +45,7 @@ export function ProjectArchitectureDiagram({
                 y1={y + nodeH}
                 x2={cx}
                 y2={y + verticalGap}
-                stroke="#67e8f9"
+                stroke="var(--accent)"
                 strokeOpacity="0.30"
                 strokeWidth="1"
                 strokeDasharray="2 2"
@@ -59,9 +59,9 @@ export function ProjectArchitectureDiagram({
               width={nodeW}
               height={nodeH}
               rx="1.5"
-              fill="#0a0f17"
+              fill="var(--surface)"
               fillOpacity="0.9"
-              stroke="#67e8f9"
+              stroke="var(--accent)"
               strokeOpacity="0.48"
               strokeWidth="0.75"
             />
@@ -71,7 +71,7 @@ export function ProjectArchitectureDiagram({
               cx={cx - nodeW / 2 + (compact ? 7 : 9)}
               cy={y + nodeH / 2}
               r={compact ? 1.8 : 2.2}
-              fill="#6ee7b7"
+              fill="var(--accent)"
               opacity="0.85"
             />
 
@@ -79,7 +79,7 @@ export function ProjectArchitectureDiagram({
             <text
               x={cx - nodeW / 2 + (compact ? 14 : 18)}
               y={y + nodeH / 2 + fontSize * 0.38}
-              fill="#eef5f8"
+              fill="var(--foreground)"
               fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
               fontSize={fontSize}
               letterSpacing="0.6"
@@ -93,7 +93,7 @@ export function ProjectArchitectureDiagram({
               <text
                 x={cx + nodeW / 2 + 5}
                 y={y + nodeH / 2 + labelFontSize * 0.38}
-                fill="#67e8f9"
+                fill="var(--accent)"
                 fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
                 fontSize={labelFontSize}
                 letterSpacing="0.4"

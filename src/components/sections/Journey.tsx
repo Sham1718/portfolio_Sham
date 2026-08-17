@@ -25,20 +25,20 @@ export function Journey() {
             y1="80"
             x2="920"
             y2="820"
-            stroke="#67e8f9"
+            stroke="var(--accent)"
             strokeOpacity="0.18"
             strokeWidth="1"
             strokeDasharray="4 4"
           />
           {[120, 240, 360, 480, 600, 720, 840].map((y, idx) => (
             <g key={idx} transform={`translate(920 ${y})`}>
-              <circle r="3" fill="#67e8f9" opacity="0.4" />
+              <circle r="3" fill="var(--accent)" opacity="0.4" />
               <line
                 x1="0"
                 y1="0"
                 x2="-30"
                 y2="0"
-                stroke="#67e8f9"
+                stroke="var(--accent)"
                 strokeOpacity="0.15"
                 strokeWidth="1"
               />
@@ -67,7 +67,7 @@ export function Journey() {
             </div>
 
             {/* System Log Metadata readout */}
-            <div className="border border-border/70 bg-surface/70 p-4 font-mono text-[0.7rem]">
+            <div className="glass-panel p-4 font-mono text-[0.7rem]">
               <p className="mb-2.5 text-[0.65rem] font-semibold tracking-[0.16em] text-accent/70 uppercase">
                 {"// System Trace Log"}
               </p>
@@ -114,13 +114,11 @@ export function Journey() {
                   return (
                     <article
                       key={milestone.id}
-                      className={`group relative border ${
-                        isActive
-                          ? "border-accent/60 bg-surface/90 shadow-[0_0_24px_rgba(103,232,249,0.06)]"
-                          : isUpcoming
-                            ? "border-dashed border-border/60 bg-surface/40"
-                            : "border-border/70 bg-surface/60 hover:border-border/90"
-                      } p-5 transition-all duration-200 sm:p-6`}
+                      className={`group relative glass-panel p-5 transition-all duration-200 sm:p-6 ${
+                        isActive ? "shadow-[0_0_24px_rgba(181,101,74,0.06)]" : ""
+                      } ${
+                        !isActive && !isUpcoming ? "hover:border-border/90" : ""
+                      }`}
                     >
                       {/* Spine Node Dot */}
                       <div

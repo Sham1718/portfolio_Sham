@@ -40,7 +40,7 @@ export function About() {
             {/* Education & Core System Specs */}
             <div className="mt-8 border-t border-border/60 pt-6 sm:mt-10">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="border border-border/70 bg-surface/70 p-4">
+                <div className="glass-panel p-4">
                   <p className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
                     Education
                   </p>
@@ -52,7 +52,7 @@ export function About() {
                   </p>
                 </div>
 
-                <div className="border border-border/70 bg-surface/70 p-4">
+                <div className="glass-panel p-4">
                   <p className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
                     System Trajectory
                   </p>
@@ -83,7 +83,7 @@ export function About() {
                 {capabilities.map((cap) => (
                   <div
                     key={cap.name}
-                    className="group border border-border/70 bg-surface/80 p-3.5 transition-colors duration-150 hover:border-accent/50"
+                    className="group glass-panel p-3.5 transition-colors duration-150 hover:border-accent/50"
                   >
                     <div className="flex items-center gap-2">
                       <span
@@ -103,7 +103,7 @@ export function About() {
             </div>
 
             {/* System Status Table */}
-            <div className="border border-border/70 bg-surface/60 p-3.5 font-mono text-[0.7rem]">
+            <div className="glass-panel p-3.5 font-mono text-[0.7rem]">
               <div className="space-y-1.5">
                 {metadata.map((item) => (
                   <div

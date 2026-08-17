@@ -51,7 +51,7 @@ export function Engineering() {
             {principles.map((principle) => (
               <article
                 key={principle.number}
-                className="group flex flex-col bg-background p-5 transition-colors duration-200 hover:bg-surface/80 sm:p-6"
+                className="group glass-panel flex flex-col p-5 transition-colors duration-200 sm:p-6"
               >
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-accent/60 transition-colors duration-200 group-hover:text-accent">

@@ -17,11 +17,12 @@ export function ArchitectureConnection({
     <line
       ref={lineRef}
       data-connection={id}
+      className="arch-connection"
       x1={from.x}
       y1={from.y}
       x2={to.x}
       y2={to.y}
-      stroke="#67e8f9"
+      stroke="var(--accent)"
       strokeOpacity={opacity}
       strokeWidth="1"
     />

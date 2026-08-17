@@ -1,7 +1,9 @@
 import { techStackData } from "@/data/tech-stack";
+import { TechOrbit } from "@/components/techstack/TechOrbit";
+import { GithubStats } from "@/components/status/GithubStats";
 
 export function TechStack() {
-  const { tag, heading, paragraph, systemMeta, categories } = techStackData;
+  const { tag, heading, paragraph, systemMeta } = techStackData;
 
   return (
     <section
@@ -22,7 +24,7 @@ export function TechStack() {
           <path
             d="M840 100V300L880 450V700"
             fill="none"
-            stroke="#67e8f9"
+            stroke="var(--accent)"
             strokeOpacity="0.25"
             strokeWidth="1"
             strokeDasharray="3 3"
@@ -33,7 +35,7 @@ export function TechStack() {
               cx={y === 450 || y === 700 ? 880 : 840}
               cy={y}
               r="3"
-              fill="#6ee7b7"
+              fill="var(--accent)"
               opacity="0.5"
             />
           ))}
@@ -60,7 +62,7 @@ export function TechStack() {
             </div>
 
             {/* System Log Metadata readout */}
-            <div className="border border-border/70 bg-surface/70 p-4 font-mono text-[0.7rem] sm:min-w-[280px]">
+            <div className="glass-panel p-4 font-mono text-[0.7rem] sm:min-w-[280px]">
               <p className="mb-2.5 text-[0.65rem] font-semibold tracking-[0.16em] text-accent/70 uppercase">
                 {"// Capability Index"}
               </p>
@@ -88,48 +90,14 @@ export function TechStack() {
           </div>
         </div>
 
-        {/* Categories Stack */}
-        <div className="space-y-12 pt-10 sm:space-y-14 sm:pt-14">
-          {categories.map((cat) => (
-            <div key={cat.id} className="space-y-4">
-              {/* Category Subheader */}
-              <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
-                <div className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 bg-accent" />
-                  <h3 className="font-mono text-xs font-semibold tracking-[0.16em] text-foreground uppercase">
-                    {cat.category}
-                  </h3>
-                </div>
-                <span className="font-mono text-[0.65rem] tracking-wider text-muted">
-                  {"// "}{cat.tag}
-                </span>
-              </div>
+        {/* Tech Orbit — rotating 3D ring of brand icons (static grid on mobile) */}
+        <div className="pt-10 sm:pt-14">
+          <TechOrbit />
+        </div>
 
-              {/* Technologies Grid */}
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-                {cat.technologies.map((tech) => (
-                  <div
-                    key={tech.name}
-                    tabIndex={0}
-                    className="group border border-border/70 bg-surface/75 p-3.5 transition-all duration-150 hover:border-accent/50 hover:bg-surface focus-visible:border-accent focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
-                  >
-                    <div className="flex items-baseline justify-between gap-2">
-                      <h4 className="font-mono text-xs font-semibold tracking-[0.06em] text-foreground/90 transition-colors duration-150 group-hover:text-foreground">
-                        {tech.name}
-                      </h4>
-                      <span
-                        aria-hidden="true"
-                        className="h-1 w-1 rounded-full bg-accent/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-                      />
-                    </div>
-                    <p className="mt-1 text-xs leading-normal text-muted transition-colors duration-150 group-hover:text-muted/90">
-                      {tech.role}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* Live GitHub stats — real data, server-rendered below the ring */}
+        <div className="mt-10 flex justify-center sm:mt-14">
+          <GithubStats />
         </div>
       </div>
     </section>

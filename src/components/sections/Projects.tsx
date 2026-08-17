@@ -73,7 +73,7 @@ export function Projects() {
                   <div className="mt-8">
                     <Link
                       href={`/projects/${project.slug}`}
-                      className="group/link inline-flex items-center gap-2 border border-border/70 bg-surface/70 px-4 py-2.5 font-mono text-xs tracking-[0.12em] text-foreground/80 uppercase transition-all duration-150 hover:border-accent/50 hover:bg-surface hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                      className="group/link glass-panel inline-flex items-center gap-2 px-4 py-2.5 font-mono text-xs tracking-[0.12em] text-foreground/80 uppercase transition-all duration-150 hover:border-accent/50 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                       aria-label={`View details for ${project.title}`}
                     >
                       View Details
@@ -89,7 +89,7 @@ export function Projects() {
 
                 {/* Right: Compact architecture diagram */}
                 <div className="flex items-start lg:col-span-5">
-                  <div className="w-full border border-border/50 bg-surface/40 p-4">
+                  <div className="glass-panel w-full p-4">
                     <p className="mb-3 font-mono text-[0.6rem] tracking-[0.16em] text-accent/50 uppercase">
                       Architecture
                     </p>

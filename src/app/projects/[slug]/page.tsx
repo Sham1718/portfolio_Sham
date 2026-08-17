@@ -34,7 +34,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       {/* Subtle background grid */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-10 bg-background opacity-[0.18] [background-image:linear-gradient(rgba(103,232,249,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(103,232,249,0.07)_1px,transparent_1px)] [background-size:4rem_4rem]"
+        className="pointer-events-none fixed inset-0 -z-10 bg-background opacity-[0.18] [background-image:linear-gradient(rgba(181,101,74,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(181,101,74,0.07)_1px,transparent_1px)] [background-size:4rem_4rem]"
       />
 
       <div className="mx-auto max-w-4xl">
