@@ -1,17 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArchitectureScene } from "@/components/background/ArchitectureScene";
 import { projectsData } from "@/data/projects";
-import { architectures } from "@/data/architectures";
-import type { ArchitectureState } from "@/types/architecture";
-
-/** Map each project to its real system architecture state. */
-const ARCHITECTURE_BY_PROJECT: Record<string, ArchitectureState> = {
-  jira: "microservices",
-  "rate-limiter": "rate-limiter",
-  "legal-ai": "legal-ai",
-};
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -95,27 +85,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         </header>
 
-        {/* Hero image / screenshot area — real image when set, else an
-            intentional placeholder (never a broken image or empty gap). */}
-        <div className="mt-10">
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={`Screenshot of ${project.title}`}
-              width={1280}
-              height={720}
-              priority
-              className="h-auto w-full rounded-md border border-border/60"
-            />
-          ) : (
-            <div className="glass-panel flex h-48 items-center justify-center rounded-md sm:h-64">
-              <span className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
-                Preview coming soon
-              </span>
-            </div>
-          )}
-        </div>
-
+        {/* Problem — the header flows directly here; the preview/hero image
+            rendering is intentionally removed until final preview images are
+            provided (project.image stays in the data for re-enabling). */}
         {/* Problem */}
         <Section title="PROBLEM">
           <p className="text-base leading-relaxed text-muted sm:text-lg">
@@ -130,27 +102,33 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </p>
         </Section>
 
-        {/* Architecture — the real system diagram via the shared engine */}
+        {/* Architecture — asset-ready: a real diagram image when provided,
+            else an intentional placeholder (never a broken image or an empty
+            window). Add the image via project.architectureImage — no code
+            changes needed. */}
         <Section title="ARCHITECTURE">
-          {/* The scene needs a real <section> ancestor for its own
-              ScrollTrigger visibility gating; the frame has no background so
-              the diagram renders against the page surface. */}
-          <section
+          <div
             aria-label={`${project.title} system architecture`}
-            className="relative h-[420px] w-full overflow-hidden rounded-md border border-border/50 sm:h-[520px]"
+            className="relative h-[420px] w-full overflow-hidden rounded-md border border-border/60 bg-surface/20 sm:h-[520px]"
           >
-            <ArchitectureScene
-              architecture={
-                architectures[ARCHITECTURE_BY_PROJECT[project.id]]
-              }
-            />
+            {project.architectureImage ? (
+              <Image
+                src={project.architectureImage}
+                alt={`${project.title} system architecture`}
+                width={1280}
+                height={720}
+                className="h-full w-full object-contain"
+              />
+            ) : (
+              <ArchitecturePlaceholder />
+            )}
             <div className="pointer-events-none absolute top-3 left-4 z-10 font-mono text-[0.6rem] tracking-[0.16em] text-accent/70 uppercase">
               System / 04 — Architecture
             </div>
             <div className="pointer-events-none absolute right-4 bottom-3 z-10 font-mono text-[0.6rem] tracking-[0.16em] text-muted uppercase">
-              {project.number} / Live
+              {project.number} / Diagram
             </div>
-          </section>
+          </div>
         </Section>
 
         {/* Implementation */}
@@ -214,39 +192,43 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </p>
         </Section>
 
-        {/* GitHub + demo actions — only rendered when a URL actually exists;
-            a missing demo shows an explicit unavailable state, never a fake
-            link. Projects with neither URL show no row at all. */}
-        {(project.github || project.demo) && (
-          <div className="mt-14 border-t border-border/70 pt-10">
-            <div className="flex flex-wrap items-center gap-4">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-                >
-                  GitHub <span aria-hidden="true">↗</span>
-                </a>
-              )}
-              {project.demo ? (
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-                >
-                  Live Demo <span aria-hidden="true">↗</span>
-                </a>
-              ) : (
-                <span className="font-mono text-xs tracking-[0.12em] text-muted/60 uppercase">
-                  Demo unavailable
-                </span>
-              )}
-            </div>
+        {/* GitHub + demo actions — always visible so the actions are never
+            hidden, but honest: real buttons only when a URL exists in the
+            project data; muted pending states when it does not (no fake or
+            placeholder URLs). */}
+        <div className="mt-14 border-t border-border/70 pt-10">
+          <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+            Repository & Deployment
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            {project.github ? (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                GitHub <span aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <span className="inline-flex items-center gap-2 border border-border/60 px-5 py-2.5 font-mono text-xs tracking-[0.12em] text-muted/60 uppercase">
+                GitHub — URL pending
+              </span>
+            )}
+            {/* Live Demo — only rendered when a verified URL exists; no dead
+                buttons, no fake links. None of the projects have one yet. */}
+            {project.demo && (
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                Live Demo <span aria-hidden="true">↗</span>
+              </a>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Back link at bottom */}
         <div className="mt-16 border-t border-border/70 pt-10">
@@ -264,6 +246,32 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Intentional architecture placeholder — shown until the project's real
+    architecture image is added (data/projects.ts → architectureImage).
+    Technical/editorial styling, no fake diagram, no broken image. */
+function ArchitecturePlaceholder() {
+  return (
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-3 px-6 text-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(181,101,74,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(181,101,74,0.08)_1px,transparent_1px)] [background-size:3rem_3rem]"
+      />
+      <p className="relative font-mono text-[0.7rem] font-semibold tracking-[0.2em] text-accent uppercase">
+        Architecture
+      </p>
+      <p className="relative font-mono text-sm tracking-[0.14em] text-foreground/70 uppercase">
+        System architecture visualization
+      </p>
+      <p className="relative font-mono text-xs tracking-[0.08em] text-muted">
+        Architecture diagram will be displayed here.
+      </p>
+      <p className="relative mt-2 font-mono text-[0.6rem] tracking-[0.16em] text-muted/60 uppercase">
+        {"// Awaiting asset"}
+      </p>
     </div>
   );
 }

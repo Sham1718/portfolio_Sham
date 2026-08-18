@@ -66,7 +66,7 @@ export function About() {
       id="about"
       ref={sectionRef}
       aria-labelledby="about-heading"
-      className="relative mx-auto w-full max-w-6xl py-20 sm:py-24 lg:py-28"
+      className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
       {/* Background architecture — full-bleed behind the content, clearly
           visible on desktop (70%) but masked under the text column so the
@@ -82,7 +82,7 @@ export function About() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--background)_0%,color-mix(in_srgb,var(--background)_55%,transparent)_40%,transparent_72%)]"
       />
 
-      <div className="relative z-10 w-full border-y border-border/70 py-12 sm:py-16 lg:py-20">
+      <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         <div className="w-full max-w-[640px]">
           <p
             ref={labelRef}

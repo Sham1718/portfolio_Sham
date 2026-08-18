@@ -7,10 +7,10 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-name"
-      className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl items-center py-20 sm:py-24"
+      className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl items-center py-10 sm:py-12 lg:py-14"
     >
       <ArchitectureScene architecture={architectures.hero} />
-      <div className="relative z-10 w-full border-y border-border/70 py-10 sm:py-14 lg:py-16">
+      <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         <p className="font-mono text-[0.7rem] font-medium tracking-[0.18em] text-accent uppercase sm:text-sm">
           System / 01
         </p>
@@ -27,7 +27,7 @@ export function Hero() {
           <RoleText />
         </div>
         <p className="mt-8 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-          Computer Engineering student focused on backend development, API
+          Computer Engineering graduate focused on backend development, API
           design, security, databases, and scalable systems.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
@@ -38,7 +38,7 @@ export function Hero() {
             View Projects
           </a>
           <a
-            href="https://github.com"
+            href="https://github.com/Sham1718"
             target="_blank"
             rel="noopener noreferrer"
             className="border border-border bg-transparent px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"

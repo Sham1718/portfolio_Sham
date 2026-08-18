@@ -16,7 +16,6 @@ export interface TechStackData {
   heading: string;
   paragraph: string;
   systemMeta: {
-    stackStatus: string;
     primaryRuntime: string;
     architectureType: string;
   };
@@ -29,7 +28,6 @@ export const techStackData: TechStackData = {
   paragraph:
     "Technologies are tools. I choose them based on the problem, the system requirements, and the trade-offs involved.",
   systemMeta: {
-    stackStatus: "VERIFIED_ACTIVE",
     primaryRuntime: "JAVA / SPRING / PYTHON",
     architectureType: "MODULAR & SERVICE-ORIENTED",
   },

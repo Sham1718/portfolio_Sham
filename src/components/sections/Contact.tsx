@@ -59,7 +59,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col justify-between py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
       {/* Subtle Background Circuit Closed Pipeline */}
       <div
@@ -86,7 +86,7 @@ export function Contact() {
         </svg>
       </div>
 
-      <div className="relative z-10 w-full border-y border-border/70 py-10 sm:py-14 lg:py-16">
+      <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         {/* Section header */}
         <div className="max-w-2xl">
           <p className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
@@ -105,12 +105,14 @@ export function Contact() {
           </p>
         </div>
 
-        {/* Terminal window — same chrome as the boot sequence, wide pane */}
-        <div className="mt-10 sm:mt-14">
+        {/* Terminal window — same chrome as the boot sequence, wide pane.
+            Moderate spacing from the heading: the terminal is the main
+            visual, but the gap shouldn't create a dead zone. */}
+        <div className="mt-8 sm:mt-10">
           <TerminalWindow label="shyam@portfolio:~/contact" size="lg">
             <div
               ref={terminalRef}
-              className="space-y-7 p-4 font-mono text-xs leading-[1.6] text-muted sm:p-5 sm:text-sm"
+              className="space-y-5 p-4 font-mono text-xs leading-[1.6] text-muted sm:p-5 sm:text-sm"
             >
               <RevealBlock revealed={revealed} delay={0}>
                 <div className="space-y-1.5">
@@ -118,7 +120,7 @@ export function Contact() {
                     <span className="text-accent">&gt; </span>whoami
                   </p>
                   <p className="text-foreground">
-                    Shyam Bharaskar — Computer Engineering student · backend
+                    Shyam Bharaskar — Computer Engineering graduate · backend
                     development
                   </p>
                 </div>
@@ -196,15 +198,7 @@ export function Contact() {
                       <p key={item.code} className="break-words">
                         <span className="text-muted/70">{item.code} </span>
                         {item.label}{" "}
-                        <span
-                          className={
-                            item.status === "CLOSED"
-                              ? "text-muted/70"
-                              : "text-status"
-                          }
-                        >
-                          [{item.status}]
-                        </span>
+                        <span className="text-status">[{item.status}]</span>
                       </p>
                     ))}
                   </div>

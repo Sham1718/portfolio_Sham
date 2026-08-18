@@ -8,6 +8,11 @@ export interface ProjectData {
   /** TODO: real screenshot URL per project (e.g. "/projects/<slug>.png") —
       optional; the detail page renders a placeholder when unset. */
   image?: string;
+  /** TODO: real architecture diagram image per project (e.g.
+      "/projects/<slug>-architecture.png"). When set, the detail page's
+      ARCHITECTURE section renders this image (object-fit: contain, never
+      cropped); when unset, it renders an intentional placeholder. */
+  architectureImage?: string;
   problem: string;
   approach: string;
   implementation: string[];
@@ -58,6 +63,8 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A functional microservices platform implementing the core workflows of a project management tool: user registration, project creation, issue tracking, and notifications.",
+    github: "https://github.com/Sham1718/Bug-Tracker",
+    architectureImage: "/images/projects/architecture/jira-architecture.png",
   },
   {
     id: "rate-limiter",
@@ -95,6 +102,8 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A working rate-limiting filter integrated into a Spring Boot application, demonstrating how traffic control can be applied at the middleware layer to protect API endpoints.",
+    github: "https://github.com/Sham1718/rate-limiter-api",
+    architectureImage: "/images/projects/architecture/rate-limiter-architecture.png",
   },
   {
     id: "legal-ai",
@@ -138,5 +147,7 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A working system that accepts legal documents, produces structured summaries, and answers specific questions grounded in the document content using a FAISS-backed RAG pipeline.",
+    github: "https://github.com/Sham1718/LegalDocumentSummarizer",
+    architectureImage: "/images/projects/architecture/legal-ai-architecture.png",
   },
 ];

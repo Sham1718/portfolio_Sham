@@ -3,13 +3,20 @@ import { TechOrbit } from "@/components/techstack/TechOrbit";
 import { GithubStats } from "@/components/status/GithubStats";
 
 export function TechStack() {
-  const { tag, heading, paragraph, systemMeta } = techStackData;
+  const { tag, heading, paragraph, systemMeta, categories } = techStackData;
+
+  // Real numbers derived from the data — never hardcoded.
+  const totalTechCount = categories.reduce(
+    (sum, category) => sum + category.technologies.length,
+    0,
+  );
+  const categoryCount = categories.length;
 
   return (
     <section
       id="tech-stack"
       aria-labelledby="tech-stack-heading"
-      className="relative mx-auto min-h-[100svh] w-full max-w-6xl py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
       {/* Subtle Background Tooling Flow Pipeline */}
       <div
@@ -42,7 +49,7 @@ export function TechStack() {
         </svg>
       </div>
 
-      <div className="relative z-10 w-full border-y border-border/70 py-10 sm:py-14 lg:py-16">
+      <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         {/* Section Header */}
         <div className="border-b border-border/70 pb-10 sm:pb-14">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
@@ -61,20 +68,30 @@ export function TechStack() {
               </p>
             </div>
 
-            {/* System Log Metadata readout */}
-            <div className="glass-panel p-4 font-mono text-[0.7rem] sm:min-w-[280px]">
+            {/* System Log Metadata readout — glass panel with a crisp,
+                warm-rust border so the panel boundary reads as intentional
+                instead of blending into the background (the stock glass
+                border is 80% --border, too faint here). */}
+            <div
+              className="glass-panel p-4 font-mono text-[0.7rem] sm:min-w-[280px]"
+              style={{
+                borderColor: "color-mix(in srgb, var(--accent) 32%, transparent)",
+              }}
+            >
               <p className="mb-2.5 text-[0.65rem] font-semibold tracking-[0.16em] text-accent/70 uppercase">
                 {"// Capability Index"}
               </p>
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-muted">STATUS:</span>
-                  <span className="flex items-center gap-1.5 font-semibold text-status">
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 rounded-full bg-status motion-safe:animate-pulse"
-                    />
-                    {systemMeta.stackStatus}
+                  <span className="text-muted">CATALOG:</span>
+                  <span className="text-foreground">
+                    {totalTechCount} TECHNOLOGIES
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-muted">DOMAINS:</span>
+                  <span className="text-foreground">
+                    {categoryCount} CATEGORIES
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-4">

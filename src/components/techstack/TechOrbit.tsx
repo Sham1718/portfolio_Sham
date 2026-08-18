@@ -38,6 +38,8 @@ export function TechOrbit() {
     <div className="tech-orbit">
       {/* Desktop: continuously rotating 3D ring (hidden below sm) */}
       <div className="tech-orbit-scene">
+        {/* Intentionally empty center — the technologies orbit negative
+            space; no core node, no label. */}
         <div className="tech-orbit-ring">
           {techItems.map((item, i) => (
             <div
@@ -51,11 +53,11 @@ export function TechOrbit() {
                 className="tech-orbit-cell"
                 role="img"
                 tabIndex={0}
-                aria-label={`${item.name} — ${item.category}`}
+                aria-label={`${item.name} — ${item.role}`}
               >
                 <TechGlyph name={item.name} />
                 <span aria-hidden="true" className="tech-orbit-tooltip">
-                  {item.name} <em>— {item.category}</em>
+                  {item.name} <em>— {item.role}</em>
                 </span>
               </div>
             </div>
@@ -123,15 +125,22 @@ export function TechOrbit() {
           width: 100%;
           height: 100%;
           color: var(--accent);
-          opacity: 0.55;
+          opacity: 0.7;
           cursor: pointer;
           outline: none;
-          transition: opacity 0.2s ease;
+          border: 1px solid transparent;
+          border-radius: 6px;
+          transition:
+            opacity 0.2s ease,
+            border-color 0.2s ease,
+            background-color 0.2s ease;
         }
 
         .tech-orbit-cell:hover,
         .tech-orbit-cell:focus-visible {
           opacity: 1;
+          border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+          background: color-mix(in srgb, var(--accent) 6%, transparent);
         }
 
         .tech-orbit-cell:hover svg,
@@ -256,10 +265,21 @@ export function TechOrbit() {
           }
         }
 
-        /* Respect reduced motion: static, evenly-distributed ring */
+        /* Respect reduced motion: stop the spin AND keep every technology
+           visible. The frozen 3D ring would leave back-facing nodes hidden
+           (backface-visibility: hidden), so swap the scene for the labeled
+           grid at every width — all 25 technologies stay readable, static. */
         @media (prefers-reduced-motion: reduce) {
           .tech-orbit-ring {
             animation: none;
+          }
+
+          .tech-orbit-scene {
+            display: none;
+          }
+
+          .tech-orbit-grid {
+            display: flex;
           }
         }
       `}</style>

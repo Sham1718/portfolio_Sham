@@ -13,7 +13,7 @@ export interface ContactData {
   systemStatus: {
     code: string;
     label: string;
-    status: "COMPLETE" | "STABLE" | "CLOSED";
+    status: "READY" | "STABLE" | "OPEN";
   }[];
   terminalPrompt: string;
 }
@@ -50,9 +50,9 @@ export const contactData: ContactData = {
     },
   ],
   systemStatus: [
-    { code: "01", label: "REQUEST COMPLETE", status: "COMPLETE" },
+    { code: "01", label: "REQUEST READY", status: "READY" },
     { code: "02", label: "SERVICES STABLE", status: "STABLE" },
-    { code: "03", label: "CONNECTIONS CLOSED", status: "CLOSED" },
+    { code: "03", label: "CONNECTION OPEN", status: "OPEN" },
   ],
   terminalPrompt: "system idle_",
 };

@@ -65,7 +65,7 @@ export function Engineering() {
       id="engineering"
       ref={sectionRef}
       aria-labelledby="engineering-heading"
-      className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl items-center py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
       {/* Background architecture — subtle living layer, masked under the
           statement column so the foreground stays dominant. */}
@@ -80,7 +80,7 @@ export function Engineering() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--background)_0%,color-mix(in_srgb,var(--background)_55%,transparent)_45%,transparent_78%)]"
       />
 
-      <div className="relative z-10 w-full border-y border-border/70 py-12 sm:py-16 lg:py-20">
+      <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         <div className="lg:grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-x-20">
           {/* Left — the statement */}
           <div>
@@ -133,13 +133,12 @@ export function Engineering() {
                       {principle.number}
                     </span>
                     <div>
-                      <h3
-                        className={
-                          principle.number === "03"
-                            ? "font-mono text-xs font-semibold tracking-[0.08em] text-accent uppercase"
-                            : "font-mono text-xs font-semibold tracking-[0.08em] text-foreground/85 uppercase"
-                        }
-                      >
+                      {/* All five principles share the identical resting
+                          treatment — no single active/selected principle.
+                          Numbers keep the rust accent (consistent decorative
+                          markers); titles are primary foreground, descriptions
+                          muted. */}
+                      <h3 className="font-mono text-xs font-semibold tracking-[0.08em] text-foreground uppercase">
                         {principle.name}
                       </h3>
                       <p className="mt-1.5 text-sm leading-relaxed text-muted">

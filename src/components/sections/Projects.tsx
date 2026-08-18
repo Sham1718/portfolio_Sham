@@ -11,11 +11,11 @@ export function Projects() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative mx-auto w-full max-w-6xl py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
       <div className="relative z-10 w-full">
         {/* Section Header */}
-        <div className="border-b border-border/70 pb-10 sm:pb-14">
+        <div className="border-b border-border/70 pb-8 sm:pb-10">
           <p className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
             04 / Projects
           </p>
