@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projectsData } from "@/data/projects";
+import { ProjectReveal } from "@/components/scroll/ProjectReveal";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -55,35 +56,37 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </nav>
 
         {/* Project Header */}
-        <header className="border-b border-border/70 pb-10">
-          <div className="flex items-baseline gap-4">
-            <span className="font-mono text-[0.7rem] font-semibold tracking-[0.18em] text-accent/60">
-              {project.number}
-            </span>
-            <p className="font-mono text-xs tracking-[0.16em] text-muted uppercase">
-              04 / Projects
-            </p>
-          </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-[2.75rem]">
-            {project.title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-            {project.shortDescription}
-          </p>
-
-          {/* Technologies */}
-          <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2">
-            {project.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground/60 uppercase"
-              >
-                {tech}
+        <ProjectReveal>
+          <header className="border-b border-border/70 pb-10">
+            <div className="flex items-baseline gap-4">
+              <span className="font-mono text-[0.7rem] font-semibold tracking-[0.18em] text-accent/60">
+                {project.number}
               </span>
-            ))}
-          </div>
+              <p className="font-mono text-xs tracking-[0.16em] text-muted uppercase">
+                04 / Projects
+              </p>
+            </div>
+            <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-[2.75rem]">
+              {project.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+              {project.shortDescription}
+            </p>
 
-        </header>
+            {/* Technologies */}
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2">
+              {project.technologies.map((tech) => (
+                <span
+                  key={tech}
+                  className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground/60 uppercase"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+          </header>
+        </ProjectReveal>
 
         {/* Problem — the header flows directly here; the preview/hero image
             rendering is intentionally removed until final preview images are
@@ -196,39 +199,41 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             hidden, but honest: real buttons only when a URL exists in the
             project data; muted pending states when it does not (no fake or
             placeholder URLs). */}
-        <div className="mt-14 border-t border-border/70 pt-10">
-          <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
-            Repository & Deployment
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            {project.github ? (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-              >
-                GitHub <span aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <span className="inline-flex items-center gap-2 border border-border/60 px-5 py-2.5 font-mono text-xs tracking-[0.12em] text-muted/60 uppercase">
-                GitHub — URL pending
-              </span>
-            )}
-            {/* Live Demo — only rendered when a verified URL exists; no dead
-                buttons, no fake links. None of the projects have one yet. */}
-            {project.demo && (
-              <a
-                href={project.demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-              >
-                Live Demo <span aria-hidden="true">↗</span>
-              </a>
-            )}
+        <ProjectReveal>
+          <div className="mt-14 border-t border-border/70 pt-10">
+            <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+              Repository & Deployment
+            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              {project.github ? (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                >
+                  GitHub <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-2 border border-border/60 px-5 py-2.5 font-mono text-xs tracking-[0.12em] text-muted/60 uppercase">
+                  GitHub — URL pending
+                </span>
+              )}
+              {/* Live Demo — only rendered when a verified URL exists; no dead
+                  buttons, no fake links. None of the projects have one yet. */}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                >
+                  Live Demo <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
           </div>
-        </div>
+        </ProjectReveal>
 
         {/* Back link at bottom */}
         <div className="mt-16 border-t border-border/70 pt-10">
@@ -284,11 +289,13 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mt-10 border-t border-border/70 pt-10">
-      <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
-        {title}
-      </p>
-      {children}
-    </div>
+    <ProjectReveal>
+      <div className="mt-10 border-t border-border/70 pt-10">
+        <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+          {title}
+        </p>
+        {children}
+      </div>
+    </ProjectReveal>
   );
 }

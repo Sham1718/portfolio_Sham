@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TerminalWindow } from "@/components/ui/TerminalWindow";
 import { contactData } from "@/data/contact";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /** One command block that fades in once when the section is first scrolled into view. */
 function RevealBlock({
@@ -32,7 +36,64 @@ export function Contact() {
 
   const [headingLine1, headingLine2] = heading.split("\n");
   const [revealed, setRevealed] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const terminalWrapRef = useRef<HTMLDivElement>(null);
+
+  // Header scroll-reveal — label → heading → paragraph, matching the other sections.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = [
+      labelRef.current,
+      headingRef.current,
+      paragraphRef.current,
+    ].filter(Boolean);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 78%",
+        once: true,
+      },
+    });
+    tl.fromTo(
+      targets,
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.55, ease: "power2.out", stagger: 0.09 },
+    );
+
+    // Terminal wrapper — simple fade+translate when it enters.
+    const termWrap = terminalWrapRef.current;
+    let termTween: gsap.core.Tween | null = null;
+    if (termWrap) {
+      gsap.set(termWrap, { opacity: 0, y: 20 });
+      termTween = gsap.to(termWrap, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: termWrap,
+          start: "top 85%",
+          once: true,
+        },
+      });
+    }
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      termTween?.scrollTrigger?.kill();
+      termTween?.kill();
+    };
+  }, []);
 
   // One-time reveal when the terminal scrolls into view — no replay on re-entry.
   useEffect(() => {
@@ -58,6 +119,7 @@ export function Contact() {
   return (
     <section
       id="contact"
+      ref={sectionRef}
       aria-labelledby="contact-heading"
       className="relative mx-auto w-full max-w-6xl py-10 sm:py-12 lg:py-14"
     >
@@ -89,18 +151,19 @@ export function Contact() {
       <div className="relative z-10 w-full border-y border-border/70 py-6 sm:py-8 lg:py-10">
         {/* Section header */}
         <div className="max-w-2xl">
-          <p className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
+          <p ref={labelRef} className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
             {tag}
           </p>
           <h2
             id="contact-heading"
+            ref={headingRef}
             className="mt-4 text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl lg:leading-[1.08]"
           >
             {headingLine1}
             <br />
             <span className="text-accent">{headingLine2}</span>
           </h2>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
+          <p ref={paragraphRef} className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
             {paragraph}
           </p>
         </div>
@@ -108,7 +171,7 @@ export function Contact() {
         {/* Terminal window — same chrome as the boot sequence, wide pane.
             Moderate spacing from the heading: the terminal is the main
             visual, but the gap shouldn't create a dead zone. */}
-        <div className="mt-8 sm:mt-10">
+        <div ref={terminalWrapRef} className="mt-8 sm:mt-10">
           <TerminalWindow label="shyam@portfolio:~/contact" size="lg">
             <div
               ref={terminalRef}
