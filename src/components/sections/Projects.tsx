@@ -1,34 +1,33 @@
 import Link from "next/link";
-import { ArchitectureScene } from "@/components/background/ArchitectureScene";
-import { ProjectArchitectureDiagram } from "@/components/projects/ProjectArchitectureDiagram";
 import { projectsData } from "@/data/projects";
-import { architectures } from "@/data/architectures";
 
+/**
+ * 04 / PROJECTS — the overview answers "what did I build?" as a clean,
+ * numbered editorial list. Deliberately NO architecture here: diagrams live
+ * only inside each project's deep-dive, so the overview stays quick to scan.
+ */
 export function Projects() {
   return (
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative mx-auto min-h-[100svh] w-full max-w-6xl py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-20 sm:py-28"
     >
-      {/* Background architecture scene — reuses microservices as the closest conceptual match */}
-      <ArchitectureScene architecture={architectures.microservices} />
-
       <div className="relative z-10 w-full">
         {/* Section Header */}
         <div className="border-b border-border/70 pb-10 sm:pb-14">
           <p className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
-            System / 04 — Projects
+            04 / Projects
           </p>
           <h2
             id="projects-heading"
-            className="mt-4 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
+            className="mt-4 max-w-xl text-3xl font-semibold tracking-[-0.04em] text-foreground uppercase sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
           >
-            Systems built from the ground up.
+            Selected Work
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-            Each project focuses on a specific engineering challenge — from
-            distributed systems to AI pipelines.
+            Three systems built from the ground up — each focused on a specific
+            engineering challenge. Open one for the full deep-dive.
           </p>
         </div>
 
@@ -37,72 +36,47 @@ export function Projects() {
           {projectsData.map((project) => (
             <article
               key={project.id}
-              className="group py-10 sm:py-12"
+              className="group relative border-l-2 border-accent/25 py-10 pl-5 transition-colors duration-200 hover:border-accent/60 sm:py-12 sm:pl-6"
             >
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
-                {/* Left: Metadata + narrative */}
-                <div className="flex flex-col justify-between lg:col-span-7">
-                  <div>
-                    <div className="flex items-baseline gap-4">
-                      <span className="font-mono text-[0.7rem] font-semibold tracking-[0.18em] text-accent/60">
-                        {project.number}
-                      </span>
-                      <h3 className="text-xl font-semibold tracking-[-0.03em] text-foreground sm:text-2xl">
-                        {project.title}
-                      </h3>
-                    </div>
-
-                    <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted sm:text-base">
-                      {project.shortDescription}
-                    </p>
-
-                    {/* Technologies */}
-                    <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1.5">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="font-mono text-[0.65rem] tracking-[0.1em] text-foreground/60 uppercase"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* View Details */}
-                  <div className="mt-8">
-                    <Link
-                      href={`/projects/${project.slug}`}
-                      className="group/link glass-panel inline-flex items-center gap-2 px-4 py-2.5 font-mono text-xs tracking-[0.12em] text-foreground/80 uppercase transition-all duration-150 hover:border-accent/50 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-                      aria-label={`View details for ${project.title}`}
-                    >
-                      View Details
-                      <span
-                        aria-hidden="true"
-                        className="translate-x-0 transition-transform duration-150 group-hover/link:translate-x-0.5"
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4">
+                <div className="flex items-baseline gap-4">
+                  <span className="font-mono text-[0.65rem] font-semibold tracking-[0.12em] text-accent/60 transition-colors duration-200 group-hover:text-accent">
+                    {project.number}
+                  </span>
+                  <h3 className="text-xl font-semibold tracking-[-0.03em] text-foreground sm:text-2xl">
+                    {project.title}
+                  </h3>
                 </div>
 
-                {/* Right: Compact architecture diagram */}
-                <div className="flex items-start lg:col-span-5">
-                  <div className="glass-panel w-full p-4">
-                    <p className="mb-3 font-mono text-[0.6rem] tracking-[0.16em] text-accent/50 uppercase">
-                      Architecture
-                    </p>
-                    <div className="flex justify-center">
-                      <div className="w-full max-w-[160px]">
-                        <ProjectArchitectureDiagram
-                          steps={project.architectureFlow}
-                          compact
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="group/link inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:text-accent/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                  aria-label={`View details for ${project.title}`}
+                >
+                  View Details
+                  <span
+                    aria-hidden="true"
+                    className="translate-x-0 transition-transform duration-150 group-hover/link:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+              </div>
+
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
+                {project.shortDescription}
+              </p>
+
+              {/* Technologies as pill chips */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {project.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="border border-border/60 px-2 py-0.5 font-mono text-[0.6rem] tracking-[0.1em] text-foreground/60 uppercase transition-colors duration-150 group-hover:border-accent/30 group-hover:text-foreground/80"
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
             </article>
           ))}

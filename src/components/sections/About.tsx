@@ -1,135 +1,154 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArchitectureScene } from "@/components/background/ArchitectureScene";
 import { aboutData } from "@/data/about";
 import { architectures } from "@/data/architectures";
 
+gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * 02 / ABOUT — a short, editorial identity statement. Content occupies the
+ * left ~55–60% of the section; the About architecture (REQUEST → CONTROLLER →
+ * SERVICE → REPOSITORY → DATABASE) reads as a recognizable technical layer on
+ * the right, masked out under the text column so labels never collide with
+ * foreground. One subtle GSAP reveal on entry, instant under
+ * prefers-reduced-motion.
+ */
 export function About() {
-  const { tag, heading, paragraphs, capabilities, education, metadata } =
-    aboutData;
+  const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const educationRef = useRef<HTMLDivElement>(null);
+  const resumeRef = useRef<HTMLAnchorElement>(null);
+  const traceRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    // Reduced motion: everything stays visible, nothing animates.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = [
+      labelRef.current,
+      headingRef.current,
+      paragraphRef.current,
+      educationRef.current,
+      resumeRef.current,
+      traceRef.current,
+    ].filter(Boolean);
+
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 78%",
+        once: true,
+      },
+    });
+    timeline.fromTo(
+      targets,
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.55, ease: "power2.out", stagger: 0.09 },
+    );
+
+    return () => {
+      timeline.scrollTrigger?.kill();
+      timeline.kill();
+    };
+  }, []);
 
   return (
     <section
       id="about"
+      ref={sectionRef}
       aria-labelledby="about-heading"
-      className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl items-center py-20 sm:py-28"
+      className="relative mx-auto w-full max-w-6xl py-20 sm:py-24 lg:py-28"
     >
-      {/* Background Architecture Scene for About */}
-      <ArchitectureScene architecture={architectures.about} />
+      {/* Background architecture — full-bleed behind the content, clearly
+          visible on desktop (70%) but masked under the text column so the
+          foreground stays dominant. Fainter on mobile (40%). */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 opacity-40 sm:opacity-70"
+      >
+        <ArchitectureScene architecture={architectures.about} />
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--background)_0%,color-mix(in_srgb,var(--background)_55%,transparent)_40%,transparent_72%)]"
+      />
 
-      {/* Foreground Content */}
-      <div className="relative z-10 w-full border-y border-border/70 py-10 sm:py-14 lg:py-16">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-14">
-          {/* Left Column: Narrative & Educational Background */}
-          <div className="flex flex-col justify-between lg:col-span-7">
-            <div>
-              <p className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs">
-                {tag}
+      <div className="relative z-10 w-full border-y border-border/70 py-12 sm:py-16 lg:py-20">
+        <div className="w-full max-w-[640px]">
+          <p
+            ref={labelRef}
+            className="font-mono text-[0.7rem] font-medium tracking-[0.2em] text-accent uppercase sm:text-xs"
+          >
+            {aboutData.tag}
+          </p>
+
+          <h2
+            id="about-heading"
+            ref={headingRef}
+            className="mt-6 max-w-[620px] text-3xl leading-[1.12] font-semibold tracking-[-0.03em] text-foreground uppercase sm:text-4xl sm:leading-[1.1] lg:text-[2.75rem] lg:leading-[1.08]"
+          >
+            {aboutData.heading}
+          </h2>
+
+          <p
+            ref={paragraphRef}
+            className="mt-7 max-w-[600px] text-base leading-7 text-muted sm:text-lg sm:leading-8"
+          >
+            {aboutData.paragraph}
+          </p>
+
+          {/* Education — a compact editorial block, not a card */}
+          <div
+            ref={educationRef}
+            className="mt-12 border-t border-border/40 pt-8"
+          >
+            <p className="font-mono text-[0.7rem] font-semibold tracking-[0.16em] text-foreground uppercase">
+              {aboutData.education.field}
+            </p>
+            <p className="mt-2 font-mono text-sm text-muted">
+              {aboutData.education.degree} / {aboutData.education.field}
+            </p>
+            {aboutData.academics && (
+              <p className="mt-1 font-mono text-xs text-accent">
+                {aboutData.academics}
               </p>
-              <h2
-                id="about-heading"
-                className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
-              >
-                {heading}
-              </h2>
-              <div className="mt-6 space-y-4 text-base leading-relaxed text-muted sm:text-lg sm:leading-8">
-                {paragraphs.map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
-              </div>
-            </div>
+            )}
 
-            {/* Education & Core System Specs */}
-            <div className="mt-8 border-t border-border/60 pt-6 sm:mt-10">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="glass-panel p-4">
-                  <p className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
-                    Education
-                  </p>
-                  <p className="mt-2 text-base font-semibold text-foreground">
-                    {education.field}
-                  </p>
-                  <p className="font-mono text-xs text-accent">
-                    {education.degree}
-                  </p>
-                </div>
-
-                <div className="glass-panel p-4">
-                  <p className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
-                    System Trajectory
-                  </p>
-                  <p className="mt-2 text-base font-semibold text-foreground">
-                    Backend Architecture
-                  </p>
-                  <p className="font-mono text-xs text-status">
-                    Java &bull; Spring Boot &bull; APIs
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Resume action — downloads the real PDF, secondary to the heading */}
+            <a
+              ref={resumeRef}
+              href="/resume/Shyam-Bharaskar.pdf"
+              download
+              className="mt-6 inline-flex items-center gap-2 border border-border px-3.5 py-2 font-mono text-[0.7rem] tracking-[0.16em] text-foreground uppercase transition-colors duration-150 hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            >
+              <span aria-hidden="true" className="text-accent">
+                ↓
+              </span>
+              Download Resume
+            </a>
           </div>
 
-          {/* Right Column: Engineering Capabilities & System Profile */}
-          <div className="flex flex-col justify-between space-y-6 lg:col-span-5">
-            <div>
-              <div className="flex items-center justify-between border-b border-border/70 pb-3">
-                <span className="font-mono text-xs font-medium tracking-[0.18em] text-accent uppercase">
-                  Technical Scope
-                </span>
-                <span className="font-mono text-[0.7rem] tracking-wider text-muted">
-                  SYSTEM / 02
-                </span>
-              </div>
-
-              <div className="mt-4 grid grid-cols-1 gap-2.5">
-                {capabilities.map((cap) => (
-                  <div
-                    key={cap.name}
-                    className="group glass-panel p-3.5 transition-colors duration-150 hover:border-accent/50"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span
-                        aria-hidden="true"
-                        className="h-1.5 w-1.5 bg-accent opacity-75 group-hover:opacity-100"
-                      />
-                      <h3 className="font-mono text-xs font-semibold tracking-[0.06em] text-foreground">
-                        {cap.name}
-                      </h3>
-                    </div>
-                    <p className="mt-1 text-xs leading-normal text-muted">
-                      {cap.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* System Status Table */}
-            <div className="glass-panel p-3.5 font-mono text-[0.7rem]">
-              <div className="space-y-1.5">
-                {metadata.map((item) => (
-                  <div
-                    key={item.key}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-muted">{item.key}:</span>
-                    <span
-                      className={
-                        item.highlight
-                          ? "flex items-center gap-1.5 font-semibold text-status"
-                          : "text-foreground"
-                      }
-                    >
-                      {item.highlight && (
-                        <span
-                          aria-hidden="true"
-                          className="h-1.5 w-1.5 rounded-full bg-status motion-safe:animate-pulse"
-                        />
-                      )}
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Technical trace — subtle signature, sits naturally below education */}
+          <div
+            ref={traceRef}
+            aria-hidden="true"
+            className="mt-8 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[0.65rem] tracking-[0.14em] text-muted uppercase"
+          >
+            {aboutData.trace.map((item, i) => (
+              <span key={item} className="flex items-center gap-2.5">
+                {i > 0 && <span className="text-accent/60">→</span>}
+                <span>{item}</span>
+              </span>
+            ))}
           </div>
         </div>
       </div>

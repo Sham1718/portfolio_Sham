@@ -6,52 +6,42 @@ export interface EngineeringPrinciple {
 
 export interface EngineeringData {
   tag: string;
+  /** Newline-separated lines — rendered as the dominant editorial statement. */
   heading: string;
   paragraph: string;
   principles: EngineeringPrinciple[];
 }
 
 export const engineeringData: EngineeringData = {
-  tag: "System / 03 — Engineering",
-  heading: "I don't just build APIs.\nI think about the system behind them.",
+  tag: "03 / Engineering",
+  heading: "Engineering\nis about\nmaking good\ndecisions.",
   paragraph:
-    "Good backend systems are more than endpoints and database queries. I focus on clear API contracts, reliable data flow, security, performance, and architecture that remains understandable as a system grows.",
+    "I focus on keeping systems understandable, APIs predictable, responsibilities clear, and implementation practical.",
   principles: [
     {
       number: "01",
-      name: "API DESIGN",
-      description:
-        "Clear contracts, predictable behavior and maintainable interfaces.",
+      name: "Simplicity",
+      description: "Reduce unnecessary complexity.",
     },
     {
       number: "02",
-      name: "DATA & DATABASES",
-      description:
-        "Structured persistence, efficient queries and deliberate data modeling.",
+      name: "Clear Boundaries",
+      description: "Keep responsibilities separated and understandable.",
     },
     {
       number: "03",
-      name: "SECURITY",
-      description:
-        "Authentication, authorization and protected resources.",
+      name: "Predictable APIs",
+      description: "Design explicit contracts between components and services.",
     },
     {
       number: "04",
-      name: "PERFORMANCE",
-      description:
-        "Caching, rate limiting and efficient request processing.",
+      name: "Failure Handling",
+      description: "Design for errors instead of assuming everything works.",
     },
     {
       number: "05",
-      name: "ARCHITECTURE",
-      description:
-        "Separation of responsibilities, clear boundaries and maintainable services.",
-    },
-    {
-      number: "06",
-      name: "SCALABILITY",
-      description:
-        "Designing systems that can grow without becoming unnecessarily complex.",
+      name: "Change",
+      description: "Build software that can evolve without becoming fragile.",
     },
   ],
 };

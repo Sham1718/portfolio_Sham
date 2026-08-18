@@ -65,12 +65,6 @@
   }
 }
 
-@supports not (backdrop-filter: blur(1px)) {
-  .glass-panel {
-    background: color-mix(in srgb, var(--surface) 85%, transparent);
-  }
-}
-
 /*
  * Ambient diagram animations — an always-on CSS layer separate from the
  * GSAP packet timeline. GSAP owns strokeOpacity (connections) and node

@@ -62,9 +62,18 @@ export function ScrollProgressRail() {
   // CustomCursor's enabled gate). The rAF keeps the update async so the
   // update isn't flagged as a synchronous setState-in-effect.
   const [mounted, setMounted] = useState(false);
+  // The rail is only meaningful on pages that actually contain the sections
+  // its ticks scroll to (the home page). Project detail pages have no such
+  // sections, so the rail hides itself there — CustomCursor and
+  // CommandPalette keep working everywhere. Defaults to true so the server
+  // and client's first render agree; the effect confirms the real value.
+  const [hasSections, setHasSections] = useState(true);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setMounted(true));
+    const frame = window.requestAnimationFrame(() => {
+      setMounted(true);
+      setHasSections(SECTION_IDS.some((id) => document.getElementById(id)));
+    });
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
@@ -74,7 +83,7 @@ export function ScrollProgressRail() {
   // prefers-reduced-motion (nothing animates). Created once the portaled
   // wrapper exists so the ref is live.
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !hasSections) return;
     const trigger = ScrollTrigger.create({
       trigger: document.body,
       start: "top top",
@@ -88,9 +97,9 @@ export function ScrollProgressRail() {
       },
     });
     return () => trigger.kill();
-  }, [mounted]);
+  }, [mounted, hasSections]);
 
-  if (!mounted) return null;
+  if (!mounted || !hasSections) return null;
 
   // Render into document.body: the app sits inside BootSequence's wrapper,
   // which always carries a translate-y-* utility — a non-none `translate`

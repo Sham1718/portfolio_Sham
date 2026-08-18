@@ -143,7 +143,37 @@ export const architectures: Record<ArchitectureState, ArchitectureModel> = {
     ]),
   },
 
-  // 5. MICROSERVICES: Asymmetric Tree Branching & Event Bus
+  // 5. RATE LIMITER: Linear Request Flow with a Rejection Branch
+  // (matches the actual project: CLIENT → HTTP_FILTER → REQUEST_COUNTER →
+  // CONTROLLER → SERVICE; requests over the limit branch to a 429 rejection.
+  // No Redis — the project tracks counters in-process.)
+  "rate-limiter": {
+    state: "rate-limiter",
+    nodes: [
+      createNode("rl-client", "CLIENT", 740, 85, "far"),
+      createNode("rl-filter", "HTTP_FILTER", 740, 190, "near"),
+      createNode("rl-counter", "REQUEST_COUNTER", 590, 320, "mid"),
+      createNode("rl-reject", "REJECTED_429", 890, 320, "far"),
+      createNode("rl-controller", "CONTROLLER", 740, 455, "near"),
+      createNode("rl-service", "SERVICE", 740, 570, "near"),
+    ],
+    connections: createLinks(
+      ["rl-client", "rl-filter"],
+      ["rl-filter", "rl-counter"],
+      ["rl-counter", "rl-controller"],
+      ["rl-counter", "rl-reject"],
+      ["rl-controller", "rl-service"],
+    ),
+    packets: createPacketRoutes([
+      "rl-client",
+      "rl-filter",
+      "rl-counter",
+      "rl-controller",
+      "rl-service",
+    ]),
+  },
+
+  // 6. MICROSERVICES: Asymmetric Tree Branching & Event Bus
   microservices: {
     state: "microservices",
     nodes: [
@@ -219,6 +249,15 @@ export const mobilePipelines: Record<
       [170, 380, "NOTIFICATION"],
     ],
   },
+  "rate-limiter": {
+    path: "M170 90V180L120 290L170 410M170 180L220 290L170 410",
+    nodes: [
+      [170, 90, "CLIENT"],
+      [170, 180, "HTTP_FILTER"],
+      [120, 290, "COUNTER"],
+      [220, 290, "429"],
+      [170, 410, "SERVICE"],
+    ],
+  },
 };
 
-export const heroArchitecture = architectures.hero;

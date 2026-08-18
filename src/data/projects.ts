@@ -1,13 +1,3 @@
-export interface ProjectArchitectureNode {
-  label: string;
-  children?: ProjectArchitectureNode[];
-}
-
-export interface ProjectArchitectureStep {
-  label: string;
-  note?: string;
-}
-
 export interface ProjectData {
   id: string;
   slug: string;
@@ -15,6 +5,9 @@ export interface ProjectData {
   title: string;
   shortDescription: string;
   technologies: string[];
+  /** TODO: real screenshot URL per project (e.g. "/projects/<slug>.png") —
+      optional; the detail page renders a placeholder when unset. */
+  image?: string;
   problem: string;
   approach: string;
   implementation: string[];
@@ -23,7 +16,6 @@ export interface ProjectData {
   result: string;
   github?: string;
   demo?: string;
-  architectureFlow: ProjectArchitectureStep[];
 }
 
 export const projectsData: ProjectData[] = [
@@ -66,14 +58,6 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A functional microservices platform implementing the core workflows of a project management tool: user registration, project creation, issue tracking, and notifications.",
-    architectureFlow: [
-      { label: "CLIENT" },
-      { label: "API_GATEWAY", note: "Auth, routing" },
-      { label: "AUTH_SERVICE", note: "JWT validation" },
-      { label: "PROJECT_SERVICE", note: "Projects & roles" },
-      { label: "ISSUE_SERVICE", note: "Issues & comments" },
-      { label: "NOTIFICATION_SERVICE", note: "Event delivery" },
-    ],
   },
   {
     id: "rate-limiter",
@@ -111,13 +95,6 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A working rate-limiting filter integrated into a Spring Boot application, demonstrating how traffic control can be applied at the middleware layer to protect API endpoints.",
-    architectureFlow: [
-      { label: "CLIENT" },
-      { label: "HTTP_FILTER", note: "Rate check" },
-      { label: "REQUEST_COUNTER", note: "Per-client tracking" },
-      { label: "CONTROLLER", note: "Business logic" },
-      { label: "SERVICE" },
-    ],
   },
   {
     id: "legal-ai",
@@ -161,15 +138,5 @@ export const projectsData: ProjectData[] = [
     ],
     result:
       "A working system that accepts legal documents, produces structured summaries, and answers specific questions grounded in the document content using a FAISS-backed RAG pipeline.",
-    architectureFlow: [
-      { label: "DOCUMENT", note: "Upload" },
-      { label: "CHUNKING", note: "Text segmentation" },
-      { label: "EMBEDDINGS", note: "SentenceTransformers" },
-      { label: "FAISS", note: "Vector index" },
-      { label: "RETRIEVAL", note: "Nearest neighbours" },
-      { label: "RAG", note: "Context assembly" },
-      { label: "MODEL", note: "T5 generation" },
-      { label: "RESPONSE", note: "Answer" },
-    ],
   },
 ];

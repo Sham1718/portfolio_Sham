@@ -33,7 +33,7 @@ export function Hero() {
         <div className="mt-10 flex flex-wrap gap-3">
           <a
             href="#projects"
-            className="border border-accent/70 bg-surface px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:bg-surface-elevated focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            className="border border-border bg-transparent px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
           >
             View Projects
           </a>
@@ -41,7 +41,7 @@ export function Hero() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="border border-border bg-transparent px-5 py-3 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            className="border border-border bg-transparent px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
           >
             GitHub
           </a>

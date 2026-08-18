@@ -1,8 +1,8 @@
 import { techIcons } from "@/data/tech-icons";
 import { techStackData } from "@/data/tech-stack";
 
-/** Radius (px) of the 3D ring. 25 items → ~70px of arc per node. */
-const ORBIT_RADIUS = 280;
+/** Radius (px) of the 3D ring. 25 items → ~85px of arc per node. */
+const ORBIT_RADIUS = 340;
 
 /**
  * Fallback badge label for any tech missing from the lookup (defensive —
@@ -82,11 +82,15 @@ export function TechOrbit() {
           width: 100%;
         }
 
-        /* 3D scene + ring (desktop) */
+        /* 3D scene + ring (desktop). No overflow set → visible, but the
+           ring only renders at widths (≥56rem) where its full projected
+           extent (~1.04 × radius + node half, ≈770px at R=340) fits inside
+           the section's content box, so it never clips at the container or
+           viewport edge during a full rotation. */
         .tech-orbit-scene {
           display: none;
-          height: 240px;
-          perspective: 1000px;
+          height: 260px;
+          perspective: 1200px;
         }
 
         .tech-orbit-ring {
@@ -106,9 +110,9 @@ export function TechOrbit() {
           position: absolute;
           top: 0;
           left: 0;
-          width: 56px;
-          height: 56px;
-          margin: -28px 0 0 -28px;
+          width: 64px;
+          height: 64px;
+          margin: -32px 0 0 -32px;
           backface-visibility: hidden;
         }
 
@@ -136,8 +140,8 @@ export function TechOrbit() {
         }
 
         .tech-orbit-cell svg {
-          width: 48px;
-          height: 48px;
+          width: 56px;
+          height: 56px;
           transition: transform 0.2s ease;
         }
 
@@ -147,14 +151,14 @@ export function TechOrbit() {
           display: flex;
           align-items: center;
           justify-content: center;
-          min-width: 48px;
-          height: 48px;
-          padding: 0 10px;
+          min-width: 56px;
+          height: 56px;
+          padding: 0 12px;
           border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
           background: color-mix(in srgb, var(--surface) 55%, transparent);
           border-radius: 4px;
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 0.6rem;
+          font-size: 0.65rem;
           letter-spacing: 0.08em;
           white-space: nowrap;
           color: var(--accent);
@@ -209,15 +213,15 @@ export function TechOrbit() {
         }
 
         .tech-orbit-grid-item svg {
-          width: 36px;
-          height: 36px;
+          width: 44px;
+          height: 44px;
         }
 
-        /* Grid badges stay compact and match the smaller grid icons */
+        /* Grid badges match the larger grid icons */
         .tech-orbit-grid-item .tech-orbit-badge {
-          min-width: 36px;
-          height: 36px;
-          padding: 0 8px;
+          min-width: 44px;
+          height: 44px;
+          padding: 0 10px;
         }
 
         .tech-orbit-grid-label {
@@ -238,8 +242,11 @@ export function TechOrbit() {
           }
         }
 
-        /* sm breakpoint (40rem) — swap grid for the 3D ring */
-        @media (min-width: 40rem) {
+        /* Ring breakpoint (56rem ≈ 896px). The ring only shows where its
+           full projected extent fits inside the section content column — at
+           smaller viewports (including tablet widths) the static grid is
+           shown instead, so icons never clip during rotation. */
+        @media (min-width: 56rem) {
           .tech-orbit-scene {
             display: block;
           }

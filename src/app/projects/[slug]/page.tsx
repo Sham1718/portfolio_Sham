@@ -1,7 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArchitectureScene } from "@/components/background/ArchitectureScene";
 import { projectsData } from "@/data/projects";
-import { ProjectArchitectureDiagram } from "@/components/projects/ProjectArchitectureDiagram";
+import { architectures } from "@/data/architectures";
+import type { ArchitectureState } from "@/types/architecture";
+
+/** Map each project to its real system architecture state. */
+const ARCHITECTURE_BY_PROJECT: Record<string, ArchitectureState> = {
+  jira: "microservices",
+  "rate-limiter": "rate-limiter",
+  "legal-ai": "legal-ai",
+};
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -61,7 +71,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               {project.number}
             </span>
             <p className="font-mono text-xs tracking-[0.16em] text-muted uppercase">
-              System / 04 — Projects
+              04 / Projects
             </p>
           </div>
           <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-[2.75rem]">
@@ -82,7 +92,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </span>
             ))}
           </div>
+
         </header>
+
+        {/* Hero image / screenshot area — real image when set, else an
+            intentional placeholder (never a broken image or empty gap). */}
+        <div className="mt-10">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={`Screenshot of ${project.title}`}
+              width={1280}
+              height={720}
+              priority
+              className="h-auto w-full rounded-md border border-border/60"
+            />
+          ) : (
+            <div className="glass-panel flex h-48 items-center justify-center rounded-md sm:h-64">
+              <span className="font-mono text-[0.7rem] tracking-[0.16em] text-muted uppercase">
+                Preview coming soon
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Problem */}
         <Section title="PROBLEM">
@@ -98,16 +130,27 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </p>
         </Section>
 
-        {/* Architecture */}
+        {/* Architecture — the real system diagram via the shared engine */}
         <Section title="ARCHITECTURE">
-          <div className="flex justify-start">
-            <div className="w-full max-w-xs border border-border/50 bg-surface/40 p-5">
-              <ProjectArchitectureDiagram
-                steps={project.architectureFlow}
-                compact={false}
-              />
+          {/* The scene needs a real <section> ancestor for its own
+              ScrollTrigger visibility gating; the frame has no background so
+              the diagram renders against the page surface. */}
+          <section
+            aria-label={`${project.title} system architecture`}
+            className="relative h-[420px] w-full overflow-hidden rounded-md border border-border/50 sm:h-[520px]"
+          >
+            <ArchitectureScene
+              architecture={
+                architectures[ARCHITECTURE_BY_PROJECT[project.id]]
+              }
+            />
+            <div className="pointer-events-none absolute top-3 left-4 z-10 font-mono text-[0.6rem] tracking-[0.16em] text-accent/70 uppercase">
+              System / 04 — Architecture
             </div>
-          </div>
+            <div className="pointer-events-none absolute right-4 bottom-3 z-10 font-mono text-[0.6rem] tracking-[0.16em] text-muted uppercase">
+              {project.number} / Live
+            </div>
+          </section>
         </Section>
 
         {/* Implementation */}
@@ -171,32 +214,35 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </p>
         </Section>
 
-        {/* Links */}
+        {/* GitHub + demo actions — only rendered when a URL actually exists;
+            a missing demo shows an explicit unavailable state, never a fake
+            link. Projects with neither URL show no row at all. */}
         {(project.github || project.demo) && (
-          <div className="mt-10 border-t border-border/70 pt-10">
-            <p className="mb-5 font-mono text-xs font-semibold tracking-[0.18em] text-accent uppercase">
-              Links
-            </p>
-            <div className="flex flex-wrap gap-3">
+          <div className="mt-14 border-t border-border/70 pt-10">
+            <div className="flex flex-wrap items-center gap-4">
               {project.github && (
                 <a
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border border-border/70 bg-surface/70 px-5 py-2.5 font-mono text-xs tracking-[0.12em] text-foreground/80 uppercase transition-colors duration-150 hover:border-accent/50 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                 >
-                  GitHub →
+                  GitHub <span aria-hidden="true">↗</span>
                 </a>
               )}
-              {project.demo && (
+              {project.demo ? (
                 <a
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border border-border/70 bg-surface/70 px-5 py-2.5 font-mono text-xs tracking-[0.12em] text-foreground/80 uppercase transition-colors duration-150 hover:border-accent/50 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                  className="inline-flex items-center gap-2 border border-accent/60 px-5 py-2.5 font-mono text-xs font-medium tracking-[0.12em] text-accent uppercase transition-colors duration-150 hover:bg-accent/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                 >
-                  Live Demo →
+                  Live Demo <span aria-hidden="true">↗</span>
                 </a>
+              ) : (
+                <span className="font-mono text-xs tracking-[0.12em] text-muted/60 uppercase">
+                  Demo unavailable
+                </span>
               )}
             </div>
           </div>

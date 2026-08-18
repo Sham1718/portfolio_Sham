@@ -3,7 +3,8 @@ export type ArchitectureState =
   | "about"
   | "engineering"
   | "legal-ai"
-  | "microservices";
+  | "microservices"
+  | "rate-limiter";
 
 export type ArchitectureNodeType =
   | "client"
